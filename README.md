@@ -13,8 +13,9 @@ git clone https://github.com/sphonesavanh/driverback.git
 cd driverback
 npm install
 
-🚀 Run the Development Server
-bash
-Copy
-Edit
+```
+## 🚀 Run the Development Server
+```bash
 npm run dev
+```
+
