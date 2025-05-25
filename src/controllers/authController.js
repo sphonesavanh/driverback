@@ -1,25 +1,33 @@
-const db = require("../db/database");
+const bcrypt = require("bcryptjs");
+const { findUserByUsername } = require("../models/userModel");
 
-const loginUser = async (req, res) => {
+const login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const result = await db.query(
-      "SELECT * FROM users WHERE username = $1 AND password = $2",
-      [username, password]
-    );
+    const user = await findUserByUsername(username);
 
-    if (result.rows.length > 0) {
-      res
-        .status(200)
-        .json({ message: "Login successful", user: result.rows[0] });
-    } else {
-      res.status(401).json({ message: "Invalid credentials" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ message: "Server error" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    return res.status(200).json({
+      message: "Login successful",
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error("Login error:", err);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
-module.exports = { loginUser };
+module.exports = { login };
