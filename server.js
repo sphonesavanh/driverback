@@ -4,7 +4,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 require("dotenv").config();
 
-const authRoutes = require(".routes/auth");
+const authRoutes = require("../bus-tracking-system-driverback/src/routes/auth");
 
 const app = express();
 const server = http.createServer(app);
