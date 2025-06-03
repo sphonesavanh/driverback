@@ -11,7 +11,11 @@ app.use(express.json());
 app.use("/api", authRoutes);
 app.use("/api/driver", driverRoutes);
 
-const PORT = 3002;
-app.listen(PORT, '192.168.1.2', () => {
+app.get("/", (req, res) => {
+  res.send("Welcome to the Bus Tracking System Driver Backend!");
+});
+
+const PORT = 5000;
+app.listen(PORT, "172.20.10.2", () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
