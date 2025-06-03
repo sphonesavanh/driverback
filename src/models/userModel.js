@@ -1,11 +1,13 @@
 const pool = require("../db/database");
 
-const findUserByUsername = async (username) => {
-  const query = "SELECT * FROM users WHERE username = $1";
-  const result = await pool.query(query, [username]);
+const getDriverByName = async (driver_name) => {
+  const result = await pool.query(
+    "SELECT * FROM drivers WHERE driver_name = $1",
+    [driver_name]
+  );
   return result.rows[0];
 };
 
 module.exports = {
-  findUserByUsername,
+  getDriverByName,
 };

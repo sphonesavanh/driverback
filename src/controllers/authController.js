@@ -1,33 +1,30 @@
-const bcrypt = require("bcryptjs");
-const { findUserByUsername } = require("../models/userModel");
+const { getDriverByName } = require("../models/driverModel");
 
-const login = async (req, res) => {
-  const { username, password } = req.body;
+const loginDriver = async (req, res) => {
+  const { driver_name, driver_password } = req.body;
+
+  if (!driver_name || !driver_password) {
+    return res.status(400).json({ error: "Missing credentials" });
+  }
 
   try {
-    const user = await findUserByUsername(username);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const driver = await getDriverByName(driver_name);
+    if (!driver || driver.driver_password !== driver_password) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
-
-    return res.status(200).json({
+    res.status(200).json({
       message: "Login successful",
-      user: {
-        id: user.id,
-        username: user.username,
-        role: user.role,
+      driver: {
+        id: driver.driver_id,
+        name: driver.driver_name,
+        phone: driver.driver_phone,
+        status: driver.driver_status,
       },
     });
   } catch (err) {
-    console.error("Login error:", err);
-    return res.status(500).json({ message: "Server error" });
+    res.status(500).json({ error: "Server error" });
   }
 };
 
-module.exports = { login };
+module.exports = { loginDriver };
