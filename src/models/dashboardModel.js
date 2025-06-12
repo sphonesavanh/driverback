@@ -8,8 +8,8 @@ const getDriverDashboard = async (driver_id) => {
       b.bus_number,
       b.bus_plate,
       bt.bus_type_capacity
-    FROM drivers d
-    JOIN bus b ON d.bus_id = b.bus_id
+    FROM driver d
+    JOIN bus b ON b.driver_id = d.driver_id
     JOIN bus_type bt ON b.bus_type_id = bt.bus_type_id
     WHERE d.driver_id = $1`,
     [driver_id]
